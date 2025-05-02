@@ -11,17 +11,17 @@ help:
 	@echo "  all        - Run the complete pipeline (capture, train, monitor)"
 
 capture:
-	sudo python main.py capture --interface en0
+	sudo python3 main.py capture --interface en0
 
 train:
-	sudo python main.py train
+	sudo python3 main.py train
 
 monitor:
-	sudo python main.py monitor --interface en0
+	sudo python3 main.py monitor --interface en0
 
 # Visualization is still separate as it's not in main.py actions
 visualize:
-	sudo python visualization.py
+	sudo python3 visualization.py
 
 # Run the complete pipeline
 all: capture train monitor
