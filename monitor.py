@@ -3,7 +3,6 @@ from joblib import load
 import numpy as np
 from util import extract_features
 import os
-import sys
 import time
 
 # Constants for anomaly detection

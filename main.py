@@ -2,9 +2,6 @@
 # uv pip install <package_name>
 
 import argparse
-from scapy.all import sniff, IP
-from joblib import load
-import numpy as np
 from capture import capture_packets, preprocess_pcap
 from train import train_model
 from monitor import monitor_traffic

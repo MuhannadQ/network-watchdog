@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from joblib import dump
-import os
 from visualization import plot_anomaly_scores, plot_packet_features
 
 # Define required feature columns for the model
