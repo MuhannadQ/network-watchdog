@@ -8,6 +8,8 @@ import time
 # Constants for anomaly detection
 ANOMALY_LABEL = "ANOMALY"
 STATUS_UPDATE_INTERVAL = 100  # Print status every this many packets
+WARNING_ICON = "⚠️"
+NORMAL_ICON = "✅"
 
 def monitor_traffic(interface, model_path, scaler_path):
     """
@@ -72,11 +74,15 @@ def monitor_traffic(interface, model_path, scaler_path):
                     if prediction == -1:  # Anomaly detected
                         anomalies += 1
                         anomaly_rate = (anomalies / total_packets) * 100
+                        status_icon = WARNING_ICON if anomaly_rate >= 50 else NORMAL_ICON
+                        status_text = "ALERT" if anomaly_rate >= 50 else "NORMAL"
                         print(f"[{ANOMALY_LABEL}] {pkt[IP].src} → {pkt[IP].dst}, size={features[0]}, proto={features[1]}, score={score:.4f}")
-                        print(f"Stats: {total_packets} packets, {anomalies} anomalies ({anomaly_rate:.2f}%), {rate:.1f} pps")
+                        print(f"{status_icon} {status_text} - Stats: {total_packets} packets, {anomalies} anomalies ({anomaly_rate:.2f}%), {rate:.1f} pps")
                     elif total_packets % STATUS_UPDATE_INTERVAL == 0:  # Print status periodically
                         anomaly_rate = (anomalies / total_packets) * 100
-                        print(f"Stats: {total_packets} packets, {anomalies} anomalies ({anomaly_rate:.2f}%), {rate:.1f} pps")
+                        status_icon = WARNING_ICON if anomaly_rate >= 50 else NORMAL_ICON
+                        status_text = "ALERT" if anomaly_rate >= 50 else "NORMAL"
+                        print(f"{status_icon} {status_text} - Stats: {total_packets} packets, {anomalies} anomalies ({anomaly_rate:.2f}%), {rate:.1f} pps")
 
         # Start sniffing packets
         sniff(iface=interface, prn=packet_handler, store=0)
@@ -86,7 +92,9 @@ def monitor_traffic(interface, model_path, scaler_path):
         print("\nMonitoring stopped.")
         if total_packets > 0:
             anomaly_rate = (anomalies / total_packets) * 100
-            print(f"Summary: {total_packets} packets processed, {anomalies} anomalies detected ({anomaly_rate:.2f}%)")
+            status_icon = WARNING_ICON if anomaly_rate >= 50 else NORMAL_ICON
+            status_text = "ALERT" if anomaly_rate >= 50 else "NORMAL"
+            print(f"{status_icon} {status_text} - Summary: {total_packets} packets processed, {anomalies} anomalies detected ({anomaly_rate:.2f}%)")
         return True
     except Exception as e:
         print(f"Error during monitoring: {str(e)}")
